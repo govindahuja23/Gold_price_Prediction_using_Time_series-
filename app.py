@@ -150,7 +150,7 @@ with col2:
 st.divider()
 
 # ---------- Sidebar ----------
-st.sidebar.image("https://media.tenor.com/ggczMlGicXAAAAAC/gold-coins.gif", use_container_width=True)
+st.sidebar.image("https://media.tenor.com/ggczMlGicXAAAAAC/gold-coins.gif")
 st.sidebar.header("Market Indicators")
 
 silver = st.sidebar.slider("Silver Price", 20.0, 100.0, 30.0)
