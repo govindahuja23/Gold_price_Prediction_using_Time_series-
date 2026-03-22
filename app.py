@@ -5,7 +5,11 @@ import joblib
 import matplotlib.pyplot as plt
 
 # Load trained model
-model = joblib.load("sarimax_model.pkl")
+try:
+    model = joblib.load("sarimax_model.pkl")
+except Exception as e:
+    st.error(f"Model loading failed: {e}")
+    st.stop()
 
 # Page settings
 st.set_page_config(
