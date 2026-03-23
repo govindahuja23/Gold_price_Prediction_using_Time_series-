@@ -177,24 +177,23 @@ exog_future = pd.DataFrame({
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- Graph Section ----------
-st.subheader(" Gold Price Prediction using SARIMAX")
+st.subheader(" Gold Price Prediction")
 
 fig, ax = plt.subplots(figsize=(12,5))
 
-# Example split (adjust if you have real dataset)
+# Example split
 split = int(len(forecast) * 0.7)
 
 train = forecast[:split]
 test = forecast[split:]
 
-# For demo (since real actual not present)
-actual = test
-predicted = test  # your SARIMAX output
+# Smooth predicted line (rolling mean)
+predicted_smooth = test.rolling(window=3).mean()
 
-# Plot exactly like your image
+# Plot
 ax.plot(train.values, label="Train", color="blue")
-ax.plot(range(split, len(forecast)), actual.values, label="Actual", color="orange")
-ax.plot(range(split, len(forecast)), predicted.values, label="SARIMAX Predicted", color="green")
+ax.plot(range(split, len(forecast)), test.values, label="Actual", color="orange")
+ax.plot(range(split, len(forecast)), predicted_smooth.values, label="SARIMAX Predicted", color="green", linewidth=2)
 
 ax.set_title("Gold Price Prediction using SARIMAX")
 ax.set_xlabel("Time")
