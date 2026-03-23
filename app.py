@@ -177,51 +177,24 @@ exog_future = pd.DataFrame({
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- Graph Section ----------
-st.subheader("📊 Gold Price Visualization")
+st.subheader("📈 Overall Gold Price Trend (Smooth View)")
 
-fig, ax = plt.subplots(figsize=(10,5))
+fig2, ax2 = plt.subplots(figsize=(10,5))
 
-# X-axis (days)
-x = np.arange(len(forecast))
+# Smooth the data using rolling mean
+smooth = pd.Series(forecast.values).rolling(window=3).mean()
 
-# 🔵 Line Plot
-ax.plot(
-    x,
-    forecast.values,
+ax2.plot(
+    smooth,
     color="gold",
-    linewidth=3,
-    label="Line Plot"
+    linewidth=4
 )
 
-# ⚫ Scatter Plot
-ax.scatter(
-    x,
-    forecast.values,
-    color="black",
-    s=60,
-    label="Scatter Points"
-)
+ax2.set_title("Smoothed Gold Price Trend")
+ax2.set_xlabel("Future Days")
+ax2.set_ylabel("Gold Price (USD)")
 
-# 📈 Linear Trend Line (Best Fit)
-z = np.polyfit(x, forecast.values, 1)
-p = np.poly1d(z)
-
-ax.plot(
-    x,
-    p(x),
-    color="red",
-    linestyle="--",
-    linewidth=2,
-    label="Trend Line"
-)
-
-# Labels
-ax.set_title("Gold Price Forecast (Line + Scatter + Trend)")
-ax.set_xlabel("Future Days")
-ax.set_ylabel("Gold Price (USD)")
-ax.legend()
-
-st.pyplot(fig)
+st.pyplot(fig2)
 # ---------- Metrics ----------
 predict_button = st.button("🔮 Predict Gold Price")
 
