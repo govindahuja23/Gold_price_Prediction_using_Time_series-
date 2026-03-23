@@ -4,23 +4,21 @@ import numpy as np
 import joblib
 import matplotlib.pyplot as plt
 
-# ---------- Load trained model ----------
-try:
-    model = joblib.load("sarimax_model.pkl")
-except Exception as e:
-    st.error(f"Model loading failed: {e}")
-    st.stop()
+# ---------- LOAD MODEL ----------
+model = joblib.load("sarimax_model.pkl")
 
-# ---------- Page settings ----------
+# ---------- PAGE SETTINGS ----------
 st.set_page_config(
     page_title="Gold Price Prediction",
     page_icon="💰",
     layout="wide"
 )
 
-# ---------- CSS ----------
+# ---------- CSS STYLING ----------
 st.markdown("""
 <style>
+
+/* Glow Title */
 .glow-title{
     text-align:center;
     padding:40px;
@@ -51,6 +49,31 @@ st.markdown("""
     color:#e5e7eb;
     font-size:18px;
 }
+
+/* Slider Styling */
+.stSlider > div > div > div > div {
+    transition: all 0.3s ease-in-out;
+}
+
+.stSlider > div > div > div {
+    background: linear-gradient(90deg,#FFD700,#FFA500);
+    height: 6px;
+    border-radius: 10px;
+}
+
+.stSlider > div > div > div > div > div {
+    background-color: gold;
+    border: 3px solid white;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0px 0px 10px gold;
+}
+
+.stSlider > div > div > div > div > div:hover {
+    transform: scale(1.3);
+    box-shadow: 0px 0px 15px gold;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -64,32 +87,32 @@ st.markdown("""
 
 st.divider()
 
-# ---------- Layout ----------
+# ---------- LAYOUT ----------
 col1, col2 = st.columns([2,1])
 
 with col1:
     st.subheader("Project Overview")
     st.write("""
-This interactive dashboard predicts **Gold Prices** using a trained **SARIMAX Time-Series Model**.
+This dashboard predicts **Gold Prices** using a **SARIMAX Model**.
 
-Gold prices are influenced by:
+Factors affecting gold price:
 • Silver Price  
 • Crude Oil Price  
 • S&P500 Index  
-• Forecast Horizon
+• Forecast Horizon  
 """)
 
 with col2:
     st.info("""
-**Model Used:** SARIMAX  
-**Data Source:** Yahoo Finance  
-**Prediction Type:** Time Series Forecast
+**Model:** SARIMAX  
+**Data:** Yahoo Finance  
+**Type:** Time Series Forecast
 """)
 
 st.divider()
 
-# ---------- Sidebar ----------
-st.sidebar.image("https://media.tenor.com/ggczMlGicXAAAAAC/gold-coins.gif")
+# ---------- SIDEBAR ----------
+st.sidebar.image("https://media.tenor.com/ggczMlGicXAAAAAC/gold-coins.gif", width=200)
 st.sidebar.header("Market Indicators")
 
 silver = st.sidebar.slider("Silver Price", 20.0, 100.0, 30.0)
@@ -97,12 +120,10 @@ oil = st.sidebar.slider("Oil Price", 50.0, 120.0, 70.0)
 sp500 = st.sidebar.slider("S&P500 Index", 4000.0, 7000.0, 5000.0)
 future_days = st.sidebar.slider("Forecast Days", 10, 120, 30)
 
-st.sidebar.markdown("---")
-
-# ---------- Generate Future Inputs ----------
-future_silver = np.linspace(silver * 0.98, silver * 1.02, future_days)
-future_oil = np.linspace(oil * 0.98, oil * 1.02, future_days)
-future_sp500 = np.linspace(sp500 * 0.99, sp500 * 1.01, future_days)
+# ---------- FUTURE INPUT ----------
+future_silver = np.linspace(silver*0.98, silver*1.02, future_days)
+future_oil = np.linspace(oil*0.98, oil*1.02, future_days)
+future_sp500 = np.linspace(sp500*0.99, sp500*1.01, future_days)
 
 exog_future = pd.DataFrame({
     "Silver": future_silver,
@@ -110,11 +131,11 @@ exog_future = pd.DataFrame({
     "SP500": future_sp500
 })
 
-# ---------- Forecast ----------
+# ---------- FORECAST ----------
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
-# ---------- Graph Section ----------
-st.subheader("Future Gold Price Forecast")
+# ---------- GRAPH ----------
+st.subheader("📊 Future Gold Price Forecast")
 
 fig, ax = plt.subplots(figsize=(10,5))
 
@@ -122,18 +143,17 @@ ax.plot(
     forecast.values,
     color="gold",
     linewidth=3,
-    marker="o",
-    label="Predicted Gold Price"
+    marker="o"
 )
 
 ax.set_title("Gold Price Forecast")
 ax.set_xlabel("Future Days")
 ax.set_ylabel("Gold Price (USD)")
-ax.legend()
+ax.grid(alpha=0.3)
 
 st.pyplot(fig)
 
-# ---------- Metrics ----------
+# ---------- PREDICTION ----------
 if st.button("🔮 Predict Gold Price"):
 
     predicted_price = forecast.iloc[0]
@@ -145,9 +165,12 @@ if st.button("🔮 Predict Gold Price"):
         border-radius:15px;
         text-align:center;
         margin-top:20px;
+        box-shadow:0px 5px 15px rgba(0,0,0,0.2);
     ">
         <h2 style="color:black;">Predicted Gold Price</h2>
-        <h1 style="color:black;">${predicted_price:.2f}</h1>
+        <h1 style="color:black; font-size:50px;">
+        ${predicted_price:.2f}
+        </h1>
     </div>
     """, unsafe_allow_html=True)
 
@@ -155,6 +178,18 @@ if st.button("🔮 Predict Gold Price"):
     col1.metric("Max Price", f"${forecast.max():.2f}")
     col2.metric("Min Price", f"${forecast.min():.2f}")
 
-# ---------- Footer ----------
+# ---------- MODEL INFO ----------
+st.header("Model Explanation")
+
+st.write("""
+SARIMAX is an advanced time-series model that includes external variables.
+
+It improves accuracy by using:
+• Gold history  
+• Silver trends  
+• Oil prices  
+• Stock market data  
+""")
+
 st.divider()
-st.caption("Gold Price Prediction using SARIMAX")
+st.caption("Gold Price Prediction Project 🚀")
