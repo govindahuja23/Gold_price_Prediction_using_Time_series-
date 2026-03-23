@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import matplotlib.pyplot as plt
+import yfinance as yf
 
 # ---------- LOAD MODEL ----------
 model = joblib.load("sarimax_model.pkl")
@@ -112,13 +113,41 @@ with col2:
 st.divider()
 
 # ---------- SIDEBAR ----------
-st.sidebar.image("https://media.tenor.com/ggczMlGicXAAAAAC/gold-coins.gif", width=200)
-st.sidebar.header("Market Indicators")
+@st.cache_data
+def get_live_data():
+    gold = yf.download("GC=F", period="1d", interval="1m")
+    silver = yf.download("SI=F", period="1d", interval="1m")
+    oil = yf.download("CL=F", period="1d", interval="1m")
+    sp500 = yf.download("^GSPC", period="1d", interval="1m")
 
-silver = st.sidebar.slider("Silver Price", 20.0, 100.0, 30.0)
-oil = st.sidebar.slider("Oil Price", 50.0, 120.0, 70.0)
-sp500 = st.sidebar.slider("S&P500 Index", 4000.0, 7000.0, 5000.0)
-future_days = st.sidebar.slider("Forecast Days", 10, 120, 30)
+    return {
+        "gold": gold["Close"].iloc[-1],
+        "silver": silver["Close"].iloc[-1],
+        "oil": oil["Close"].iloc[-1],
+        "sp500": sp500["Close"].iloc[-1]
+    }
+
+live_data = get_live_data()
+
+st.sidebar.header("📡 Live Market Indicators")
+
+silver = st.sidebar.slider(
+    "Silver Price",
+    20.0, 100.0,
+    float(live_data["silver"])
+)
+
+oil = st.sidebar.slider(
+    "Oil Price",
+    50.0, 120.0,
+    float(live_data["oil"])
+)
+
+sp500 = st.sidebar.slider(
+    "S&P500 Index",
+    4000.0, 7000.0,
+    float(live_data["sp500"])
+)
 
 # ---------- FUTURE INPUT ----------
 future_silver = np.linspace(silver*0.98, silver*1.02, future_days)
