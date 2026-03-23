@@ -177,25 +177,24 @@ exog_future = pd.DataFrame({
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- Graph Section ----------
-import numpy as np
-from scipy.interpolate import make_interp_spline
+import matplotlib.pyplot as plt
+import streamlit as st
 
-# X values
-x = np.arange(len(test))
-y = test.values
+st.subheader("📊 Gold Price Prediction using SARIMAX")
 
-# Smooth curve
-x_smooth = np.linspace(x.min(), x.max(), 300)
-y_smooth = make_interp_spline(x, y, k=3)(x_smooth)
+fig, ax = plt.subplots(figsize=(10,5))
 
-# Plot
-ax.plot(train.values, label="Train", color="blue")
+# Plot real time-series (NO zig-zag issue)
+ax.plot(train.index, train, label="Train", color="blue")
+ax.plot(test.index, test, label="Actual", color="orange")
+ax.plot(forecast.index, forecast, label="SARIMAX Predicted", color="green")
 
-ax.plot(range(split, len(forecast)), test.values, 
-        label="Actual", color="orange")
+ax.set_title("Gold Price Prediction using SARIMAX")
+ax.set_xlabel("Date")
+ax.set_ylabel("Gold Price (USD)")
+ax.legend()
 
-ax.plot(x_smooth + split, y_smooth, 
-        label="SARIMAX Predicted", color="green", linewidth=3)
+st.pyplot(fig)
 # ---------- Metrics ----------
 predict_button = st.button("🔮 Predict Gold Price")
 
