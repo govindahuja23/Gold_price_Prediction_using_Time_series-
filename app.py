@@ -174,7 +174,7 @@ exog_future = pd.DataFrame({
 })
 
 # ---------- Forecast ----------
-forecast = model.forecast(steps=future_days, exog=exog_future)
+forecast = model.forecast(steps=len(test))
 
 # ---------- Graph Section ----------
 data = pd.read_excel("gold_prediction_dataset.xlsx")
