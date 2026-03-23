@@ -180,7 +180,7 @@ forecast = model.forecast(steps=future_days, exog=exog_future)
 import pandas as pd
 
 # Load dataset
-data = pd.read_excel("gold_prediction_dataset.xls",engine="xlrd")
+data = pd.read_excel("gold_prediction_dataset.xlsx")
 
 # Convert Date column
 data['Date'] = pd.to_datetime(data['Date'])
