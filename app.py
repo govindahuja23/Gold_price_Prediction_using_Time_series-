@@ -174,37 +174,7 @@ exog_future = pd.DataFrame({
 })
 
 # ---------- Forecast ----------
-st.subheader("📊 Model Performance (Train vs Actual vs Predicted)")
 
-fig3, ax3 = plt.subplots(figsize=(12,5))
-
-# 🔵 Train Data (fake or sample for demo if not available)
-train_len = 100  # adjust if you have real train data
-train_data = np.linspace(2000, 3400, train_len)
-
-# 🟠 Actual Data (last part of train or simulated)
-actual_data = train_data[-30:]
-
-# 🟢 Predicted Data (your forecast)
-predicted_data = forecast.values[:30]
-
-# X-axis
-x_train = np.arange(len(train_data))
-x_actual = np.arange(len(train_data)-30, len(train_data))
-x_pred = np.arange(len(train_data)-30, len(train_data))
-
-# Plot
-ax3.plot(x_train, train_data, label="Train", color="blue")
-ax3.plot(x_actual, actual_data, label="Actual", color="orange")
-ax3.plot(x_pred, predicted_data, label="SARIMAX Predicted", color="green")
-
-# Labels
-ax3.set_title("Gold Price Prediction using SARIMAX")
-ax3.set_xlabel("Time")
-ax3.set_ylabel("Gold Price (USD)")
-ax3.legend()
-
-st.pyplot(fig3)
 # ---------- Graph Section ----------
 st.subheader("📈 Overall Gold Price Trend (Smooth View)")
 
