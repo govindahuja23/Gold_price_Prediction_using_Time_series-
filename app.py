@@ -174,6 +174,7 @@ exog_future = pd.DataFrame({
 })
 
 # ---------- Forecast ----------
+forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- Graph Section ----------
 st.subheader("📈 Gold Price Trend")
