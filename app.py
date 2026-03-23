@@ -177,6 +177,17 @@ exog_future = pd.DataFrame({
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- Graph Section ----------
+import pandas as pd
+
+# Load dataset
+data = pd.read_excel("gold_prediction_dataset.xls")
+
+# Convert Date column
+data['Date'] = pd.to_datetime(data['Date'])
+
+# Set Date as index
+data.set_index('Date', inplace=True)
+
 import matplotlib.pyplot as plt
 import streamlit as st
 import pandas as pd
