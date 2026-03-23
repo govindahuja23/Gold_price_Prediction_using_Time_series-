@@ -174,6 +174,14 @@ exog_future = pd.DataFrame({
 })
 
 # ---------- Forecast ----------
+# Select gold column
+series = data['Gold']
+
+# Split data
+split = int(len(series) * 0.8)
+
+train = series[:split]
+test = series[split:]
 forecast = model.forecast(steps=len(test))
 
 # ---------- Graph Section ----------
