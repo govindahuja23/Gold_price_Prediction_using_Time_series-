@@ -179,12 +179,28 @@ forecast = model.forecast(steps=future_days, exog=exog_future)
 # ---------- Graph Section ----------
 import matplotlib.pyplot as plt
 import streamlit as st
+import pandas as pd
 
 st.subheader("📊 Gold Price Prediction using SARIMAX")
 
+# Example: your original data
+# Replace 'data' with your dataset column (like df['Gold'])
+series = data['Gold']   # <-- IMPORTANT (change if needed)
+
+# Split data
+split = int(len(series) * 0.8)
+train = series[:split]
+test = series[split:]
+
+# Forecast using your model
+forecast = model_fit.forecast(steps=len(test))
+
+# IMPORTANT: fix index (THIS removes zig-zag issue)
+forecast = pd.Series(forecast, index=test.index)
+
+# Plot
 fig, ax = plt.subplots(figsize=(10,5))
 
-# Plot real time-series (NO zig-zag issue)
 ax.plot(train.index, train, label="Train", color="blue")
 ax.plot(test.index, test, label="Actual", color="orange")
 ax.plot(forecast.index, forecast, label="SARIMAX Predicted", color="green")
@@ -193,6 +209,7 @@ ax.set_title("Gold Price Prediction using SARIMAX")
 ax.set_xlabel("Date")
 ax.set_ylabel("Gold Price (USD)")
 ax.legend()
+ax.grid(alpha=0.3)
 
 st.pyplot(fig)
 # ---------- Metrics ----------
