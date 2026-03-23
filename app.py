@@ -177,30 +177,25 @@ exog_future = pd.DataFrame({
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- Graph Section ----------
-st.subheader(" Gold Price Prediction")
+import numpy as np
+from scipy.interpolate import make_interp_spline
 
-fig, ax = plt.subplots(figsize=(12,5))
+# X values
+x = np.arange(len(test))
+y = test.values
 
-# Example split
-split = int(len(forecast) * 0.7)
-
-train = forecast[:split]
-test = forecast[split:]
-
-# Smooth predicted line (rolling mean)
-predicted_smooth = test.rolling(window=3).mean()
+# Smooth curve
+x_smooth = np.linspace(x.min(), x.max(), 300)
+y_smooth = make_interp_spline(x, y, k=3)(x_smooth)
 
 # Plot
 ax.plot(train.values, label="Train", color="blue")
-ax.plot(range(split, len(forecast)), test.values, label="Actual", color="orange")
-ax.plot(range(split, len(forecast)), predicted_smooth.values, label="SARIMAX Predicted", color="green", linewidth=2)
 
-ax.set_title("Gold Price Prediction using SARIMAX")
-ax.set_xlabel("Time")
-ax.set_ylabel("Gold Price (USD)")
-ax.legend()
+ax.plot(range(split, len(forecast)), test.values, 
+        label="Actual", color="orange")
 
-st.pyplot(fig)
+ax.plot(x_smooth + split, y_smooth, 
+        label="SARIMAX Predicted", color="green", linewidth=3)
 # ---------- Metrics ----------
 predict_button = st.button("🔮 Predict Gold Price")
 
