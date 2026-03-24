@@ -181,9 +181,7 @@ train = target[:-30]
 test = target[-30:]
 fig, ax = plt.subplots(figsize=(10,5))
 
-# Plot historical data (you must already have train & test)
-ax.plot(train, label="Train")
-ax.plot(test, label="Actual")
+
 
 # Plot forecast line
 ax.plot(forecast.index, forecast, label="SARIMAX Predicted", color="green")
