@@ -151,6 +151,7 @@ sp500 = st.sidebar.slider(
 )
 
 # ---------- FUTURE INPUT ----------
+future_days = st.sidebar.slider("Forecast Days", 1, 30, 7)
 future_silver = np.linspace(silver*0.98, silver*1.02, future_days)
 future_oil = np.linspace(oil*0.98, oil*1.02, future_days)
 future_sp500 = np.linspace(sp500*0.99, sp500*1.01, future_days)
