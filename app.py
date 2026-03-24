@@ -164,9 +164,16 @@ exog_future = pd.DataFrame({
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- GRAPH ----------
-st.subheader(" Gold Price Prediction using SARIMAX")
+fig, ax = plt.subplots(figsize=(10,5))
 
-st.image("gold_price_prediction.png")
+ax.plot(forecast, marker='o', linewidth=2)
+ax.fill_between(range(len(forecast)), forecast, alpha=0.1)
+
+ax.set_title("Future Gold Price Forecast", fontsize=16)
+ax.set_xlabel("Days Ahead")
+ax.set_ylabel("Price (USD)")
+
+st.pyplot(fig)
 # ---------- PREDICTION ----------
 if st.button("🔮 Predict Gold Price"):
 
