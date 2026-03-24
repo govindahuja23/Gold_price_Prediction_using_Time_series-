@@ -114,6 +114,7 @@ with col2:
 st.divider()
 
 # ---------- SIDEBAR ----------
+st.sidebar.image("https://media4.giphy.com/media/6wf6OiQdh25GahuZMm/giphy.gif")
 @st.cache_data
 def get_live_data():
     gold = yf.download("GC=F", period="1d", interval="1m")
