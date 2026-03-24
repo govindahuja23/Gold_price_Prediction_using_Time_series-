@@ -166,7 +166,19 @@ forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- GRAPH ----------
 # ---------- GRAPH (TRAIN + ACTUAL + FORECAST) ----------
+# ---------- LOAD DATA ----------
+data = pd.read_excel("gold_prediction_dataset.xlsx")
 
+# Make sure date column exists (change if needed)
+data['Date'] = pd.to_datetime(data['Date'])
+data.set_index('Date', inplace=True)
+
+# Target column (change if needed)
+target = data['Gold']
+
+# Train-test split
+train = target[:-30]
+test = target[-30:]
 fig, ax = plt.subplots(figsize=(10,5))
 
 # Plot historical data (you must already have train & test)
