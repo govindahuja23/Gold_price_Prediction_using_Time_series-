@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -150,7 +151,6 @@ sp500 = st.sidebar.slider(
 )
 
 # ---------- FUTURE INPUT ----------
-future_days = st.sidebar.slider("Forecast Days", 1, 30, 7)
 future_silver = np.linspace(silver*0.98, silver*1.02, future_days)
 future_oil = np.linspace(oil*0.98, oil*1.02, future_days)
 future_sp500 = np.linspace(sp500*0.99, sp500*1.01, future_days)
@@ -165,66 +165,9 @@ exog_future = pd.DataFrame({
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- GRAPH ----------
-# ---------- GRAPH (TRAIN + ACTUAL + FORECAST) ----------
-# ---------- LOAD DATA ----------
-data = pd.read_excel("gold_prediction_dataset.xlsx")
+st.subheader(" Gold Price Prediction using SARIMAX")
 
-# Make sure date column exists (change if needed)
-data['Date'] = pd.to_datetime(data['Date'])
-data.set_index('Date', inplace=True)
-
-# Target column (change if needed)
-target = data['Gold']
-
-# Train-test split
-train = target[:-30]
-test = target[-30:]
-fig, ax = plt.subplots(figsize=(10,5))
-
-
-
-# Plot forecast line
-ax.plot(forecast.index, forecast, label="SARIMAX Predicted", color="green")
-
-# Dot placeholder (empty initially)
-dot, = ax.plot([], [], 'ro', markersize=8, label="Predicted Point")
-
-ax.set_title("Gold Price Prediction using SARIMAX")
-ax.legend()
-
-graph_placeholder = st.pyplot(fig)
-
-# ---------- BUTTON ACTION ----------
-if st.button("🔮 Predict Gold Price"):
-
-    predicted_price = forecast.iloc[0]
-    predicted_index = forecast.index[0]
-
-    # Add red dot on predicted point
-    ax.plot(predicted_index, predicted_price, 'ro', markersize=10)
-
-    st.pyplot(fig)  # update graph
-
-    # Show prediction card
-    st.markdown(f"""
-    <div style="
-        background: linear-gradient(90deg,#FFD700,#FFC300);
-        padding:30px;
-        border-radius:15px;
-        text-align:center;
-        margin-top:20px;
-        box-shadow:0px 5px 15px rgba(0,0,0,0.2);
-    ">
-        <h2 style="color:black;">Predicted Gold Price</h2>
-        <h1 style="color:black; font-size:50px;">
-        ${predicted_price:.2f}
-        </h1>
-    </div>
-    """, unsafe_allow_html=True)
-
-    col1, col2 = st.columns(2)
-    col1.metric("Max Price", f"${forecast.max():.2f}")
-    col2.metric("Min Price", f"${forecast.min():.2f}")
+st.image("gold_price_prediction.png")
 # ---------- PREDICTION ----------
 if st.button("🔮 Predict Gold Price"):
 
@@ -265,3 +208,4 @@ It improves accuracy by using:
 
 st.divider()
 st.caption("Gold Price Prediction Project 🚀")
+
