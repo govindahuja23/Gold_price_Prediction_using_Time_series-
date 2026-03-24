@@ -190,11 +190,7 @@ if st.button("🔮 Predict Gold Price"):
         </h1>
     </div>
     """, unsafe_allow_html=True)
-# 📊 Insight Box (ADD HERE)
-if predicted_price > live_data['gold']:
-    st.success("📈 Gold prices are expected to increase based on current indicators.")
-else:
-    st.error("📉 Gold prices may decrease based on current indicators.")
+
 
     col1, col2 = st.columns(2)
     col1.metric("Max Price", f"${forecast.max():.2f}")
