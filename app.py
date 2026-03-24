@@ -165,16 +165,56 @@ exog_future = pd.DataFrame({
 forecast = model.forecast(steps=future_days, exog=exog_future)
 
 # ---------- GRAPH ----------
+# ---------- GRAPH (TRAIN + ACTUAL + FORECAST) ----------
+
 fig, ax = plt.subplots(figsize=(10,5))
 
-ax.plot(forecast, marker='o', linewidth=2)
-ax.fill_between(range(len(forecast)), forecast, alpha=0.1)
+# Plot historical data (you must already have train & test)
+ax.plot(train, label="Train")
+ax.plot(test, label="Actual")
 
-ax.set_title("Future Gold Price Forecast", fontsize=16)
-ax.set_xlabel("Days Ahead")
-ax.set_ylabel("Price (USD)")
+# Plot forecast line
+ax.plot(forecast.index, forecast, label="SARIMAX Predicted", color="green")
 
-st.pyplot(fig)
+# Dot placeholder (empty initially)
+dot, = ax.plot([], [], 'ro', markersize=8, label="Predicted Point")
+
+ax.set_title("Gold Price Prediction using SARIMAX")
+ax.legend()
+
+graph_placeholder = st.pyplot(fig)
+
+# ---------- BUTTON ACTION ----------
+if st.button("🔮 Predict Gold Price"):
+
+    predicted_price = forecast.iloc[0]
+    predicted_index = forecast.index[0]
+
+    # Add red dot on predicted point
+    ax.plot(predicted_index, predicted_price, 'ro', markersize=10)
+
+    st.pyplot(fig)  # update graph
+
+    # Show prediction card
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(90deg,#FFD700,#FFC300);
+        padding:30px;
+        border-radius:15px;
+        text-align:center;
+        margin-top:20px;
+        box-shadow:0px 5px 15px rgba(0,0,0,0.2);
+    ">
+        <h2 style="color:black;">Predicted Gold Price</h2>
+        <h1 style="color:black; font-size:50px;">
+        ${predicted_price:.2f}
+        </h1>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+    col1.metric("Max Price", f"${forecast.max():.2f}")
+    col2.metric("Min Price", f"${forecast.min():.2f}")
 # ---------- PREDICTION ----------
 if st.button("🔮 Predict Gold Price"):
 
